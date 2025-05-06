@@ -1,5 +1,5 @@
-import os
 from multiprocessing import cpu_count
+from pathlib import Path
 
 import torch
 from fairseq import checkpoint_utils
@@ -11,10 +11,10 @@ from infer_pack.models import (
     SynthesizerTrnMs768NSFsid,
     SynthesizerTrnMs768NSFsid_nono,
 )
-from src.my_utils import load_audio
-from src.vc_infer_pipeline import VC
+from my_utils import load_audio
+from vc_infer_pipeline import VC
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 class Config:
@@ -31,14 +31,24 @@ class Config:
             i_device = int(self.device.split(":")[-1])
             self.gpu_name = torch.cuda.get_device_name(i_device)
             if (
-                ("16" in self.gpu_name and "V100" not in self.gpu_name.upper())
-                or "P40" in self.gpu_name.upper()
-                or "1060" in self.gpu_name
-                or "1070" in self.gpu_name
-                or "1080" in self.gpu_name
+                    ("16" in self.gpu_name and "V100" not in self.gpu_name.upper())
+                    or "P40" in self.gpu_name.upper()
+                    or "1060" in self.gpu_name
+                    or "1070" in self.gpu_name
+                    or "1080" in self.gpu_name
             ):
                 print("16 series/10 series P40 forced single precision")
                 self.is_half = False
+                for config_file in ["32k.json", "40k.json", "48k.json"]:
+                    with open(BASE_DIR / "src" / "configs" / config_file, "r") as f:
+                        strr = f.read().replace("true", "false")
+                    with open(BASE_DIR / "src" / "configs" / config_file, "w") as f:
+                        f.write(strr)
+                with open(BASE_DIR / "src" / "trainset_preprocess_pipeline_print.py", "r") as f:
+                    strr = f.read().replace("3.7", "3.0")
+                with open(BASE_DIR / "src" / "trainset_preprocess_pipeline_print.py", "w") as f:
+                    f.write(strr)
+            else:
                 self.gpu_name = None
             self.gpu_mem = int(
                 torch.cuda.get_device_properties(i_device).total_memory
@@ -47,7 +57,11 @@ class Config:
                 / 1024
                 + 0.4
             )
-
+            if self.gpu_mem <= 4:
+                with open(BASE_DIR / "src" / "trainset_preprocess_pipeline_print.py", "r") as f:
+                    strr = f.read().replace("3.7", "3.0")
+                with open(BASE_DIR / "src" / "trainset_preprocess_pipeline_print.py", "w") as f:
+                    f.write(strr)
         elif torch.backends.mps.is_available():
             print("No supported N-card found, use MPS for inference")
             self.device = "mps"
@@ -60,17 +74,19 @@ class Config:
             self.n_cpu = cpu_count()
 
         if self.is_half:
+            # 6G memory config
             x_pad = 3
             x_query = 10
             x_center = 60
             x_max = 65
         else:
+            # 5G memory config
             x_pad = 1
             x_query = 6
             x_center = 38
             x_max = 41
 
-        if self.gpu_mem is not None and self.gpu_mem <= 4:
+        if self.gpu_mem != None and self.gpu_mem <= 4:
             x_pad = 1
             x_query = 5
             x_center = 30
@@ -80,7 +96,7 @@ class Config:
 
 
 def load_hubert(device, is_half, model_path):
-    models, saved_cfg, task = checkpoint_utils.load_model_ensemble_and_task([model_path], suffix='')
+    models, saved_cfg, task = checkpoint_utils.load_model_ensemble_and_task([model_path], suffix='', )
     hubert = models[0]
     hubert = hubert.to(device)
 
@@ -127,9 +143,50 @@ def get_vc(device, is_half, config, model_path):
     return cpt, version, net_g, tgt_sr, vc
 
 
-def rvc_infer(index_path, index_rate, input_path, output_path, pitch_change, f0_method, cpt, version, net_g, filter_radius, tgt_sr, rms_mix_rate, protect, crepe_hop_length, vc, hubert_model):
+def rvc_infer(
+    index_path, 
+    index_rate, 
+    input_path, 
+    output_path, 
+    pitch_change, 
+    f0_method, 
+    cpt, 
+    version, 
+    net_g, 
+    filter_radius, 
+    tgt_sr, 
+    rms_mix_rate, 
+    protect, 
+    crepe_hop_length, 
+    vc, 
+    hubert_model, 
+    f0autotune,     
+):
     audio = load_audio(input_path, 16000)
     times = [0, 0, 0]
     if_f0 = cpt.get('f0', 1)
-    audio_opt = vc.pipeline(hubert_model, net_g, 0, audio, input_path, times, pitch_change, f0_method, index_path, index_rate, if_f0, filter_radius, tgt_sr, 0, rms_mix_rate, version, protect, crepe_hop_length)
+    audio_opt = vc.pipeline(
+        hubert_model, 
+        net_g, 
+        0, 
+        audio, 
+        input_path, 
+        times, 
+        pitch_change, 
+        f0_method, 
+        index_path, 
+        index_rate, 
+        if_f0, 
+        filter_radius, 
+        tgt_sr, 
+        0, 
+        rms_mix_rate, 
+        version, 
+        protect, 
+        crepe_hop_length, 
+        f0autotune=False, 
+        f0_file=None, 
+        f0_min=50, 
+        f0_max=1100
+    )
     wavfile.write(output_path, tgt_sr, audio_opt)
