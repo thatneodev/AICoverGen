@@ -6,7 +6,9 @@ MDX_DOWNLOAD_LINK = 'https://github.com/TRvlvr/model_repo/releases/download/all_
 RVC_DOWNLOAD_LINK = 'https://huggingface.co/NeoPy/rvc-base/resolve/main/'
 
 # Base and model directories
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
 MDX_MODELS_DIR = os.path.join(BASE_DIR, 'mdxnet_models')
 RVC_MODELS_DIR = os.path.join(BASE_DIR, 'rvc_models')
 
