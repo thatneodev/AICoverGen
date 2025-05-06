@@ -1,6 +1,5 @@
 from functools import lru_cache
 from time import time as ttime
-
 import faiss
 import librosa
 import numpy as np
@@ -14,10 +13,13 @@ import torchcrepe
 import traceback
 from scipy import signal
 from torch import Tensor
+import gc
+import re
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-now_dir = os.path.join(BASE_DIR, 'src')
+
+BASE_DIR = os.getcwd()
 sys.path.append(now_dir)
+
 
 bh, ah = signal.butter(N=5, Wn=48, btype="high", fs=16000)
 
