@@ -1,18 +1,19 @@
-from pathlib import Path
+import os
 import requests
 
 MDX_DOWNLOAD_LINK = 'https://github.com/TRvlvr/model_repo/releases/download/all_public_uvr_models/'
 RVC_DOWNLOAD_LINK = 'https://huggingface.co/lj1995/VoiceConversionWebUI/resolve/main/'
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-mdxnet_models_dir = BASE_DIR / 'mdxnet_models'
-rvc_models_dir = BASE_DIR / 'rvc_models'
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+mdxnet_models_dir = os.path.join(BASE_DIR, 'mdxnet_models')
+rvc_models_dir = os.path.join(BASE_DIR, 'rvc_models')
 
 
 def dl_model(link, model_name, dir_name):
     with requests.get(f'{link}{model_name}') as r:
         r.raise_for_status()
-        with open(dir_name / model_name, 'wb') as f:
+        file_path = os.path.join(dir_name, model_name)
+        with open(file_path, 'wb') as f:
             for chunk in r.iter_content(chunk_size=8192):
                 f.write(chunk)
 
