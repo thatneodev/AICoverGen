@@ -10,7 +10,9 @@ import random
 import gc
 import re
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.getcwd()
+
+
 now_dir = os.path.join(BASE_DIR, 'src')
 sys.path.append(now_dir)
 
