@@ -1,24 +1,37 @@
+# Core HTTP and file download utilities
 requests
-mega.py
 gdown
 wget
-gradio
+mega.py
+
+# Data handling and validation
+pydantic==2.3.0
+numpy==1.23.5
+einops
+
+# Audio processing
 librosa==0.9.2
 sox
 yt_dlp
 pedalboard
-onnxruntime-gpu>=1.17
-torch<2.6
-torchaudio<2.6
-torchvision<0.21
-git+https://github.com/One-sixth/fairseq.git
 ffmpeg-python>=0.2.0
 praat-parselmouth>=0.4.2
-torchcrepe==0.0.23
 pyworld==0.3.4
+torchaudio<2.6
+
+# Deep learning frameworks
+torch<2.6
+torchvision<0.21
+onnxruntime-gpu>=1.17
+ctranslate2==4.4.0
 faiss-cpu==1.7.3
-numpy==1.23.5
-einops
-local-attention
 tensorboardX
+
+# Models and special modules
+torchcrepe==0.0.23
+git+https://github.com/One-sixth/fairseq.git
+local-attention
+
+# UI and visualization
+gradio==4.44.1
 matplotlib==3.7.2
