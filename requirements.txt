@@ -3,11 +3,10 @@ requests
 gdown
 wget
 mega.py
-numpy==1.26.4
 
 # Data handling and validation
 pydantic==2.3.0
-numpy==1.23.5
+numpy==1.26.4
 einops
 
 # Audio processing
