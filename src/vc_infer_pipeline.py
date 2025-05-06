@@ -16,8 +16,8 @@ BASE_DIR = os.getcwd()
 now_dir = os.path.join(BASE_DIR, 'src')
 sys.path.append(now_dir)
 
-from src.predictor.FCPE import FCPEF0Predictor
-from src.predictor.RMVPE import RMVPE
+from predictor.FCPE import FCPEF0Predictor
+from predictor.RMVPE import RMVPE
 
 bh, ah = signal.butter(N=5, Wn=48, btype="high", fs=16000)
 
