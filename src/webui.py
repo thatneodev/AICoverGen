@@ -132,11 +132,11 @@ def filter_models(tags, query):
             if query.lower() in model_attributes:
                 models_table.append([model['name'], model['description'], model['credit'], model['url'], model['tags']])
 
-    return gr.DataFrame.update(value=models_table)
+    return gr.update(value=models_table)
 
 
 def pub_dl_autofill(pub_models, event: gr.SelectData):
-    return gr.Text.update(value=pub_models.loc[event.index[0], 'URL']), gr.Text.update(value=pub_models.loc[event.index[0], 'Model Name'])
+    return gr.update(value=pub_models.loc[event.index[0], 'URL']), gr.Text.update(value=pub_models.loc[event.index[0], 'Model Name'])
 
 
 def swap_visibility():
@@ -178,30 +178,28 @@ if __name__ == '__main__':
     )
         # main tab
         with gr.Tab("Generate"):
+            with gr.Row():
+                with gr.Column():
+                    rvc_model = gr.Dropdown(voice_models, label='Voice Models', info='Models folder "AICoverGen --> rvc_models". After new models are added into this folder, click the refresh button')
+                    ref_btn = gr.Button('Refresh Models 🔁', variant='primary')
 
-            with gr.Accordion('Main Options'):
-                with gr.Row():
-                    with gr.Column():
-                        rvc_model = gr.Dropdown(voice_models, label='Voice Models', info='Models folder "AICoverGen --> rvc_models". After new models are added into this folder, click the refresh button')
-                        ref_btn = gr.Button('Refresh Models 🔁', variant='primary')
+                with gr.Column() as yt_link_col:
+                    song_input = gr.Text(label='Song input', info='Link to a song on YouTube or full path to a local file. For file upload, click the button below.')
+                    show_file_upload_button = gr.Button('Upload file instead')
 
-                    with gr.Column() as yt_link_col:
-                        song_input = gr.Text(label='Song input', info='Link to a song on YouTube or full path to a local file. For file upload, click the button below.')
-                        show_file_upload_button = gr.Button('Upload file instead')
+                with gr.Column(visible=False) as file_upload_col:
+                    local_file = gr.File(label='Audio file')
+                    song_input_file = gr.UploadButton('Upload 📂', file_types=['audio'], variant='primary')
+                    show_yt_link_button = gr.Button('Paste YouTube link/Path to local file instead')
+                    song_input_file.upload(process_file_upload, inputs=[song_input_file], outputs=[local_file, song_input])
 
-                    with gr.Column(visible=False) as file_upload_col:
-                        local_file = gr.File(label='Audio file')
-                        song_input_file = gr.UploadButton('Upload 📂', file_types=['audio'], variant='primary')
-                        show_yt_link_button = gr.Button('Paste YouTube link/Path to local file instead')
-                        song_input_file.upload(process_file_upload, inputs=[song_input_file], outputs=[local_file, song_input])
+                with gr.Column():
+                    pitch = gr.Slider(-3, 3, value=0, step=1, label='Pitch Change (Vocals ONLY)', info='Generally, use 1 for male to female conversions and -1 for vice-versa. (Octaves)')
+                    pitch_all = gr.Slider(-12, 12, value=0, step=1, label='Overall Pitch Change', info='Changes pitch/key of vocals and instrumentals together. Altering this slightly reduces sound quality. (Semitones)')
+                show_file_upload_button.click(swap_visibility, outputs=[file_upload_col, yt_link_col, song_input, local_file])
+                show_yt_link_button.click(swap_visibility, outputs=[yt_link_col, file_upload_col, song_input, local_file])
 
-                    with gr.Column():
-                        pitch = gr.Slider(-3, 3, value=0, step=1, label='Pitch Change (Vocals ONLY)', info='Generally, use 1 for male to female conversions and -1 for vice-versa. (Octaves)')
-                        pitch_all = gr.Slider(-12, 12, value=0, step=1, label='Overall Pitch Change', info='Changes pitch/key of vocals and instrumentals together. Altering this slightly reduces sound quality. (Semitones)')
-                    show_file_upload_button.click(swap_visibility, outputs=[file_upload_col, yt_link_col, song_input, local_file])
-                    show_yt_link_button.click(swap_visibility, outputs=[yt_link_col, file_upload_col, song_input, local_file])
-
-            with gr.Accordion('Voice conversion options', open=False):
+            with gr.Accordion('RVC options', open=False):
                 with gr.Row():
                     index_rate = gr.Slider(0, 1, value=0.5, label='Index Rate', info="Controls how much of the AI voice's accent to keep in the vocals")
                     filter_radius = gr.Slider(0, 7, value=3, step=1, label='Filter radius', info='If >=3: apply median filtering median filtering to the harvested pitch results. Can reduce breathiness')
