@@ -21,7 +21,7 @@ from pydub import AudioSegment
 from src.mdx import run_mdx
 from src.rvc import Config, load_hubert, get_vc, rvc_infer
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.getcwd()
 
 mdxnet_models_dir = os.path.join(BASE_DIR, 'mdxnet_models')
 rvc_models_dir = os.path.join(BASE_DIR, 'rvc_models')
