@@ -26,6 +26,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 mdxnet_models_dir = os.path.join(BASE_DIR, 'mdxnet_models')
 rvc_models_dir = os.path.join(BASE_DIR, 'rvc_models')
 output_dir = os.path.join(BASE_DIR, 'song_output')
+cookies_dir = os.path.join(BASE_DIR, 'src/yt_dlp.txt')
+
 
 
 def get_youtube_video_id(url, ignore_playlist=True):
@@ -68,6 +70,7 @@ def yt_download(link):
         'ignoreerrors': True,
         'no_warnings': True,
         'quiet': True,
+        'cookies': cookies_dir,
         'extractaudio': True,
         'postprocessors': [{'key': 'FFmpegExtractAudio', 'preferredcodec': 'mp3'}],
     }
