@@ -24,7 +24,7 @@ def get_current_models(models_dir):
 
 def update_models_list():
     models_l = get_current_models(rvc_models_dir)
-    return gr.Dropdown.update(choices=models_l)
+    return gr.update(choices=models_l)
 
 
 def load_public_models():
@@ -35,7 +35,7 @@ def load_public_models():
             models_table.append(model)
 
     tags = list(public_models['tags'].keys())
-    return gr.DataFrame.update(value=models_table), gr.CheckboxGroup.update(choices=tags)
+    return gr.update(value=models_table), gr.CheckboxGroup.update(choices=tags)
 
 
 def extract_zip(extraction_folder, zip_name):
