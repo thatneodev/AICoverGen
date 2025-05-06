@@ -136,7 +136,6 @@ def rvc_infer(
     crepe_hop_length, 
     vc, 
     hubert_model, 
-    f0autotune,     
 ):
     audio = load_audio(input_path, 16000)
     times = [0, 0, 0]
