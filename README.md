@@ -1,9 +1,12 @@
 # AICoverGen
+
+
 An autonomous pipeline to create covers with any RVC v2 trained AI voice from YouTube videos or a local audio file. For developers who may want to add a singing functionality into their AI assistant/chatbot/vtuber, or for people who want to hear their favourite characters sing their favourite song.
 
-Showcase: https://www.youtube.com/watch?v=2qZuE4WM7CM
+--
 
-Setup Guide: https://www.youtube.com/watch?v=pdlhk4vVHQk
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/SociallyIneptWeeb/AICoverGen/blob/main/AICoverGen_colab.ipynb)
+
 
 ![](images/webui_generate.png?raw=true)
 
@@ -58,15 +61,6 @@ git pull
 For colab users, simply click `Runtime` in the top navigation bar of the colab notebook and `Disconnect and delete runtime` in the dropdown menu. 
 Then follow the instructions in the notebook to run the webui.
 
-## Colab notebook
-
-For those without a powerful enough NVIDIA GPU, you may try AICoverGen out using Google Colab.
-
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/SociallyIneptWeeb/AICoverGen/blob/main/AICoverGen_colab.ipynb)
-
-For those who face issues with Google Colab notebook disconnecting after a few minutes, here's an alternative that doesn't use the WebUI.
-
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ardha27/AICoverGen-NoUI-Colab/blob/main/CoverGen_No_UI.ipynb)
 
 For those who want to run this locally, follow the setup guide below.
 
