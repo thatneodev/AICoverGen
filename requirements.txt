@@ -33,5 +33,5 @@ git+https://github.com/One-sixth/fairseq.git
 local-attention
 
 # UI and visualization
-gradio==4.44.1
+gradio==5.29.0
 matplotlib==3.7.2
