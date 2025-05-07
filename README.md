@@ -5,7 +5,7 @@ An autonomous pipeline to create covers with any RVC v2 trained AI voice from Yo
 
 --
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/SociallyIneptWeeb/AICoverGen/blob/main/AICoverGen_colab.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1CtibQrla8B56iMikI9tY_Y2wziiHDDGl)
 
 
 ![](images/webui_generate.png?raw=true)
