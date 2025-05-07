@@ -19,7 +19,7 @@ from pedalboard.io import AudioFile
 from pydub import AudioSegment
 
 from mdxnet import run_mdx
-from rvc import Config, load_hubert, get_vc, rvc_infer
+from infer.rvc import Config, load_hubert, get_vc, rvc_infer
 
 BASE_DIR = os.getcwd()
 
